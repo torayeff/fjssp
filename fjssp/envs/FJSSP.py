@@ -107,11 +107,11 @@ class FJSSPEnv(gym.Env):
     def __init__(
         self,
         data_path=None,
-        num_jobs=50,
-        num_machines=50,
-        max_ops=50,
-        max_time_per_operation=100,
-        mask_p=None,
+        num_jobs=5,
+        num_machines=5,
+        max_ops=5,
+        max_time_per_operation=10,
+        mask_p=0.5,
     ) -> None:
         if data_path is not None:
             # read jobs from file
@@ -126,10 +126,7 @@ class FJSSPEnv(gym.Env):
             self.max_ops = max_ops
             self.max_time_per_operation = max_time_per_operation
 
-        assert (mask_p is None) or (
-            0 <= mask_p <= 1
-        ), "mask_p should be between 0 and 1"
-
+        assert 0 <= mask_p <= 1, "mask_p should be between 0 and 1"
         self.mask_p = mask_p
 
         self.observation_space = FJSSPObservationSpace(
@@ -172,9 +169,6 @@ class FJSSPEnv(gym.Env):
                         self.J[job_idx, op_idx, m - 1] = t
             self.P = np.zeros_like(self.J)
         else:
-            if self.mask_p is None:
-                self.mask_p = self.np_random.uniform()
-                
             self.observation_space = FJSSPObservationSpace(
                 num_jobs=self.num_jobs,
                 max_ops=self.max_ops,
@@ -375,12 +369,3 @@ class FJSSPEnv(gym.Env):
             }
         )
         fig.show()
-
-
-if __name__ == "__main__":
-    from gym.utils.env_checker import check_env
-
-    print("Checking environment structure..")
-    env = FJSSPEnv()
-    status = check_env(env)
-    print(f"Env check status: {status}")
