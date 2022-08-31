@@ -137,13 +137,8 @@ class FJSSPEnv(gym.Env):
             mask_p=self.mask_p,
         )
 
-        self.action_space = spaces.Dict(
-            {
-                # the last job is "do-nothing" job
-                "selected_job": spaces.Discrete(self.num_jobs + 1),
-                "selected_machine": spaces.Discrete(self.num_machines),
-            }
-        )
+        # the last job is "do-nothing" job
+        self.action_space = spaces.MultiDiscrete([self.num_jobs + 1, self.num_machines])
 
     def reset(
         self,
@@ -192,7 +187,7 @@ class FJSSPEnv(gym.Env):
         return (observation, info) if return_info else observation
 
     def step(self, action):
-        j, m = action["selected_job"], action["selected_machine"]
+        j, m = action
         reward = 0
 
         # do nothing job

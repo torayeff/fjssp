@@ -43,9 +43,9 @@ class SimpleAgent:
                 break
 
             if selected_m is not None:
-                return {"selected_job": selected_j, "selected_machine": selected_m}
+                return [selected_j, selected_m]
 
         if do_nothing:
-            return {"selected_job": J.shape[0], "selected_machine": 0}
+            return [J.shape[0], 0]
         else:
             print("Something is wrong! This should not happen!")
